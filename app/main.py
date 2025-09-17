@@ -4,7 +4,12 @@ from __future__ import annotations
 class Animal:
     alive: list["Animal"] = []
 
-    def __init__(self, name: str, health: int = 100) -> None:
+    def __init__(
+            self,
+            name: str,
+            health: int = 100
+    ) -> None:
+
         self.name = name
         self.health = health
         self.hidden = False
@@ -18,21 +23,23 @@ class Animal:
     @staticmethod
     def check_alive(animal_obj: Animal) -> None:
         if animal_obj.health <= 0:
-            Animal.alive.remove(animal_obj)
+            if animal_obj in Animal.alive:
+                Animal.alive.remove(animal_obj)
 
 
 class Herbivore(Animal):
     def hide(self) -> None:
-        if self.hidden:
-            self.hidden = False
-        else:
-            self.hidden = True
+        self.hidden = not self.hidden
 
 
 class Carnivore(Animal):
-    def bite(self, herbivore: Herbivore) -> None:
+    def bite(
+            self,
+            herbivore: Herbivore
+    ) -> None:
+
         if isinstance(herbivore, Herbivore):
             if not herbivore.hidden:
                 if herbivore.health > 0:
                     herbivore.health -= 50
-                Animal.check_alive(herbivore)
+                    Animal.check_alive(herbivore)
